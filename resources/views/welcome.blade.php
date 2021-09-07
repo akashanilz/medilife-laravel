@@ -10,5 +10,6 @@
  <h1 style="text-align: center">
      Medilife
  </h1>
+ <p style="text-align: center">Covid test</p>
 </body>
 </html>
