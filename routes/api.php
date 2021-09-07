@@ -22,5 +22,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [\App\Http\Controllers\API\PassportController::class,'login']);
 Route::post('register', [\App\Http\Controllers\API\PassportController::class,'register']);
 Route::middleware('auth:api')->group(function () {
-    Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
+    Route::get('/dashboard', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
 });
