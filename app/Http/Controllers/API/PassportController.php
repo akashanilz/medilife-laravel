@@ -30,7 +30,7 @@ class PassportController extends Controller
         ];
         if(auth()->attempt($credentials)){
             $token=auth()->user()->createToken('medilife')->accessToken;
-            return response()->json(['name'=>$token],200);
+            return response()->json(['token'=>$token],200);
         }
         else{
             return response()->json(['error'=>'unAutorized'],401);
