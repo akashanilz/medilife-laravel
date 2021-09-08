@@ -15,19 +15,19 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'api/dashboard/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['POST', 'GET','PUT','DELETE', '*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://localhost:3000','http://localhost:3001', 'http://medilife.altdive.com', '*'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [ 'X-Custom-Header','Upgrade-Insecure-Requests', '*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => false,
 
-    'max_age' => 0,
+    'max_age' => false,
 
     'supports_credentials' => false,
 
