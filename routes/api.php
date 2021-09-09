@@ -27,6 +27,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
         Route::post('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
         Route::get('count', [\App\Http\Controllers\API\PassportController::class,'count']);
+        Route::get('allClients', [\App\Http\Controllers\API\PassportController::class,'allClient']);
     });
 });
 
