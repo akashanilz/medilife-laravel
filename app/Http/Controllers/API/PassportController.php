@@ -88,7 +88,7 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $clients=Client::all();
-                    return response()->json([$clients],200);
+                    return response()->json($clients,200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
