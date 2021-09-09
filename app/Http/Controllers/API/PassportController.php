@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client ;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
@@ -45,6 +46,26 @@ class PassportController extends Controller
                 return response()->json(['error'=>"Access denied"],401);
             }
 
+        }
+        public function createClient(Request $request){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $client=new Client;
+                    $client->name=$request->name;
+                    $client->email=$request->email;
+                    $client->mobile=$request->mobile;
+                    $client->address=$request->address;
+                    $client->save();
+                    return response()->json(["success"=>"Successfully added client"],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
         }
 
 }

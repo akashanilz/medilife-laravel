@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,10 @@ use Illuminate\Support\Facades\Route;
 //
 Route::post('login', [\App\Http\Controllers\API\PassportController::class,'login']);
 Route::post('register', [\App\Http\Controllers\API\PassportController::class,'register']);
-Route::middleware('auth:api')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
+Route::prefix('dashboard')->group(function () {
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
+        Route::get('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
+    });
 });
+
