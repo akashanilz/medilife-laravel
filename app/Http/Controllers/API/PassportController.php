@@ -67,5 +67,21 @@ class PassportController extends Controller
                 return response()->json(["Error"=>"Unauthorized"],401);
             }
         }
+        public function count(){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $employee=UserRole::where('role','=',2)->get()->count();
+                    $client=Client::all()->count();
+                    return response()->json(['employee'=>$employee,'client'=>$client],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
 
 }
