@@ -47,7 +47,7 @@ class PassportController extends Controller
             }
 
         }
-        public function createClient(Request $request){
+        public function createClients(Request $request){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
@@ -83,12 +83,167 @@ class PassportController extends Controller
                 return response()->json(["Error"=>"Unauthorized"],401);
             }
         }
-        public function allClient(){
+        public function allClients(){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $clients=Client::all();
                     return response()->json($clients,200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function editClient(Request $request, $id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $client=Client::find($id);
+                    if($request->name){
+                        $client->name=$request->name;
+                    }
+                    if($request->email){
+                        $client->email=$request->email;
+                    }
+                    if($request->mobile){
+                        $client->mobile=$request->mobile;
+                    }
+                    if($request->address){
+                        $client->address=$request->address;
+                    }
+                    $client->update();
+                    return response()->json(['client'=>$client],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function viewClient($id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $client=Client::find($id);
+                    return response()->json(['client'=>$client],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function deleteClient($id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    Client::find($id)->delete();
+                    return response()->json(['message'=>'Deleted Successfully'],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function createEmployee(Request $request){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $user=new User();
+                    $user->name=$request->name;
+                    $user->email=$request->email;
+                    $user->password=Hash::make($request->password);
+                    $user->save();
+                    $role=new UserRole();
+                    $role->user_id=$user->id;
+                    $role->role=2;
+                    $role->save();
+                    $token =$user->createToken('medilife')->accessToken;
+                    return response()->json(['token'=>$token],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function allEmployees(){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $user = User::whereHas('role',function($q){
+                        $q->where('role','=','2');
+                    })->get();
+                    $clients=UserRole::where('role','=','2')->get();
+                    return response()->json($user,200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function editEmployee(Request $request, $id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $user=User::find($id);
+                    if($request->name){
+                        $user->name=$request->name;
+                    }
+                    if($request->email){
+                        $user->email=$request->email;
+                    }
+                    if($request->password){
+                        $user->password=Hash::make($request->password);;
+                    }
+                    $user->update();
+                    return response()->json(['user'=>$user],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function viewEmployee($id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $user=User::find($id);
+                    return response()->json(['user'=>$user],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function deleteEmployee($id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    User::find($id)->delete();
+                    return response()->json(['message'=>'Deleted Successfully'],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);

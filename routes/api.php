@@ -25,9 +25,20 @@ Route::post('register', [\App\Http\Controllers\API\PassportController::class,'re
 Route::prefix('dashboard')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
+        /**Client */
         Route::post('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
         Route::get('count', [\App\Http\Controllers\API\PassportController::class,'count']);
-        Route::get('allClients', [\App\Http\Controllers\API\PassportController::class,'allClient']);
+        Route::get('allClients', [\App\Http\Controllers\API\PassportController::class,'allClients']);
+        Route::put('editClient/{id}', [\App\Http\Controllers\API\PassportController::class,'editClient']);
+        Route::get('viewClient/{id}', [\App\Http\Controllers\API\PassportController::class,'viewClient']);
+        Route::delete('deleteClient/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteClient']);
+        /**Employee */
+        Route::post('createEmployee', [\App\Http\Controllers\API\PassportController::class,'createEmployee']);
+        Route::get('allEmployees', [\App\Http\Controllers\API\PassportController::class,'allEmployees']);
+        Route::put('editEmployee/{id}', [\App\Http\Controllers\API\PassportController::class,'editEmployee']);
+        Route::get('viewEmployee/{id}', [\App\Http\Controllers\API\PassportController::class,'viewEmployee']);
+        Route::delete('deleteEmployee/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteEmployee']);
+
     });
 });
 
