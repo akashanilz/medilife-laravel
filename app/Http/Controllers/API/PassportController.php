@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client ;
+use App\Models\Location;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\UserRole;
@@ -47,6 +48,12 @@ class PassportController extends Controller
                 return response()->json(['error'=>"Access denied"],401);
             }
 
+        }
+        public function createLocation(Request $request){
+            $location= new Location();
+            $location->name=$request->name;
+            $location->save();
+            return response()->json(['location'=>$location],200);
         }
         public function createClients(Request $request){
             if(auth()->user()){

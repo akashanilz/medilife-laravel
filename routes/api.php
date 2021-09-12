@@ -25,6 +25,8 @@ Route::post('register', [\App\Http\Controllers\API\PassportController::class,'re
 Route::prefix('dashboard')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
+        /**Location */
+        Route::post('createLocation', [\App\Http\Controllers\API\PassportController::class,'createLocation']);
         /**Client */
         Route::post('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
         Route::get('count', [\App\Http\Controllers\API\PassportController::class,'count']);
