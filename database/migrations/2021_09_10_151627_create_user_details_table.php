@@ -22,6 +22,7 @@ class CreateUserDetailsTable extends Migration
             $table->date('dob')->nullable();
             $table->string('age')->nullable();
             $table->string('designation')->nullable();
+            $table->integer('location_id');
             $table->timestamps();
         });
     }

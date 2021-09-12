@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Client ;
 use App\Models\User;
+use App\Models\UserDetail;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -161,13 +162,23 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $user=new User();
+                    $user_details= new UserDetail();
                     $user->name=$request->name;
                     $user->email=$request->email;
                     $user->password=Hash::make($request->password);
                     $user->save();
+                    $user_details->user_id=$user->id;
+                    $user_details->doj=$request->doj;
+                    $user_details->mobile=$request->mobile;
+                    $user_details->address=$request->address;
+                    $user_details->dob=$request->dob;
+                    $user_details->location_id=$request->location_id;
+                    $user_details->age=$request->age;
+                    $user_details->designation=$request->designation;
+                    $user_details->save();
                     $role=new UserRole();
                     $role->user_id=$user->id;
-                    $role->role=2;
+                    $role->role=$request->role;
                     $role->save();
                     $token =$user->createToken('medilife')->accessToken;
                     return response()->json(['token'=>$token],200);
@@ -203,6 +214,7 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $user=User::find($id);
+                    $user_details= UserDetail::where('user_id','=',$id)->first();
                     if($request->name){
                         $user->name=$request->name;
                     }
@@ -212,6 +224,28 @@ class PassportController extends Controller
                     if($request->password){
                         $user->password=Hash::make($request->password);;
                     }
+                    if($request->doj){
+                        $user_details->doj=$request->doj;
+                    }
+                    if($request->mobile){
+                        $user_details->mobile=$request->mobile;
+                    }
+                    if($request->address){
+                        $user_details->address=$request->address;
+                    }
+                    if($request->dob){
+                        $user_details->dob=$request->dob;
+                    }
+                    if($request->age){
+                        $user_details->age=$request->age;
+                    }
+                    if($request->designation){
+                        $user_details->designation=$request->designation;
+                    }
+                    if($request->location_id){
+                        $user_details->location_id=$request->location_id;
+                    }
+                    $user_details->update();
                     $user->update();
                     return response()->json(['user'=>$user],200);
                 }
