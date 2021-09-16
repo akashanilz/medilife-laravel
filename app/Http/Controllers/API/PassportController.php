@@ -189,7 +189,7 @@ class PassportController extends Controller
                     $role->role=2;
                     $role->save();
                     $token =$user->createToken('medilife')->accessToken;
-                    return response()->json(['token'=>$token],200);
+                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
