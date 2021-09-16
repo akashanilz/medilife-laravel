@@ -255,7 +255,7 @@ class PassportController extends Controller
                     }
                     $user_details->update();
                     $user->update();
-                    return response()->json(['user'=>$user],200);
+                    return response()->json(['user'=>$user,'user_details'=>$user_details],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
@@ -270,7 +270,8 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $user=User::find($id);
-                    return response()->json(['user'=>$user],200);
+                    $user_details=UserDetail::where('user_id','=',$id)->first();
+                    return response()->json(['user'=>$user,'user_details'=>$user_details],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
@@ -321,7 +322,7 @@ class PassportController extends Controller
                     $role->role=3;
                     $role->save();
                     $token =$user->createToken('medilife')->accessToken;
-                    return response()->json(['token'=>$token],200);
+                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
@@ -387,7 +388,7 @@ class PassportController extends Controller
                     }
                     $user_details->update();
                     $user->update();
-                    return response()->json(['user'=>$user],200);
+                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
@@ -402,7 +403,8 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $user=User::find($id);
-                    return response()->json(['user'=>$user],200);
+                    $user_details=UserDetail::where('user_id','=',$id)->first();
+                    return response()->json(['user'=>$user,'user_details'=>$user_details],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
