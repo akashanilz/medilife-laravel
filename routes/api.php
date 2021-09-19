@@ -26,8 +26,11 @@ Route::prefix('dashboard')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('/', [\App\Http\Controllers\API\PassportController::class,'dashboard']);
         /**Location */
-        Route::post('createLocation', [\App\Http\Controllers\API\PassportController::class,'createLocation']);
-        /**Clien
+         Route::post('createLocation', [\App\Http\Controllers\API\PassportController::class,'createLocation']);
+         Route::put('editLocation', [\App\Http\Controllers\API\PassportController::class,'editLocation']);
+         Route::delete('deleteLocation/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteLocation']);
+         Route::get('allLocations', [\App\Http\Controllers\API\PassportController::class,'allLocations']);
+        /**Client */
         Route::post('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
         Route::get('count', [\App\Http\Controllers\API\PassportController::class,'count']);
         Route::get('allClients', [\App\Http\Controllers\API\PassportController::class,'allClients']);

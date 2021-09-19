@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserRole extends Model
 {
-   // use SoftDeletes;
+    use SoftDeletes;
     use HasFactory;
     public function user(){
         return $this->belongsTo(User::class);

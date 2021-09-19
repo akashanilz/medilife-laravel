@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserDetail extends Model
 {
-   // use SoftDeletes;
+    use SoftDeletes;
     use HasFactory;
 }

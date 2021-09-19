@@ -50,11 +50,69 @@ class PassportController extends Controller
 
         }
         public function createLocation(Request $request){
-            $location= new Location();
-            $location->name=$request->name;
-            $location->save();
-            return response()->json(['location'=>$location],200);
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                  $location= new Location();
+                  $location->name=$request->name;
+                  $location->save();
+                  return response()->json(['location'=>$location],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
         }
+        public function deleteLocation($id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    Location::find($id)->delete();
+                    return response()->json(['Deleted successfully'],200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function editLocation(Request $request,$id){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $location=Location::find($id);
+                    $location->name=$request->name;
+                    $location->update();
+                    return response()->json($location,200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+        }
+        public function allLocations(){
+            if(auth()->user()){
+               $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+               if($roles->role == 1){
+                   $locations=Location::all();
+                   return response()->json($locations,200);
+               }
+                 else{
+                   return response()->json(["Error"=>"Unauthorized"],401);
+               }
+            }
+              else{
+                   return response()->json(["Error"=>"Unauthorized"],401);
+               }
+       }
         public function createClient(Request $request){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
@@ -92,6 +150,7 @@ class PassportController extends Controller
                 return response()->json(["Error"=>"Unauthorized"],401);
             }
         }
+
         public function allClients(){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
@@ -286,6 +345,8 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     User::find($id)->delete();
+                    UserRole::where('user_id','=',$id)->first()->delete();
+                    UserDetail::where('user_id','=',$id)->first()->delete();
                     return response()->json(['message'=>'Deleted Successfully'],200);
                 }
                 else{
@@ -419,6 +480,8 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     User::find($id)->delete();
+                    UserRole::where('user_id','=',$id)->first()->delete();
+                    UserDetail::where('user_id','=',$id)->first()->delete();
                     return response()->json(['message'=>'Deleted Successfully'],200);
                 }
                 else{
