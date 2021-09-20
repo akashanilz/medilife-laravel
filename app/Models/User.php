@@ -48,4 +48,11 @@ class User extends Authenticatable
         return $this->hasOne(UserRole::class);
 
     }
+    public function driverAppointments(){
+    return $this->hasMany(Appointment::class,'driver_id'); 
+    }
+    public function employeeAppointments(){
+        return $this->hasMany(Appointment::class,'employee_id'); 
+    
+        }
 }

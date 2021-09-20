@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -492,5 +493,21 @@ class PassportController extends Controller
                 return response()->json(["Error"=>"Unauthorized"],401);
             }
         }
-
+        public function getFreeUsers(Request $request){
+            $date=$request->date;
+            $time=$request->time;
+            $to_time = Carbon::parse($time)->addHour()->toTimeString();
+           // dd($to_time);
+            $driver = User::whereHas('role',function($q){
+                $q->where('role',3);
+            })->whereDoesntHave('driverAppointments', function ($query) use($date,$time,$to_time)  {
+                $query->where('date','=',$date)->where('time',$time);
+            })->get();
+            $employee = User::whereHas('role',function($q){
+                $q->where('role',2);
+            })->whereDoesntHave('employeeAppointments', function ($query) use($date,$time,$to_time)  {
+                $query->where('date','=',$date)->where('time',$time);
+            })->get();
+            return response()->json(['employee'=>$employee,'driver'=>$driver],200);
+        }
 }

@@ -50,7 +50,9 @@ Route::prefix('dashboard')->group(function () {
           Route::put('editDriver/{id}', [\App\Http\Controllers\API\PassportController::class,'editDriver']);
           Route::get('viewDriver/{id}', [\App\Http\Controllers\API\PassportController::class,'viewDriver']);
           Route::delete('deleteDriver/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteDriver']);
-
+          /**Appointment */
+          Route::post('getFreeUsers', [\App\Http\Controllers\API\PassportController::class,'getFreeUsers']);
+         
     });
 });
 
