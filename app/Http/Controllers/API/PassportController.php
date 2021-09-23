@@ -298,8 +298,21 @@ class PassportController extends Controller
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
-
                     $user=User::find($id);
+                    $validator = Validator::make($request->all(),[
+                        'name'=>'required|max:100',
+                        'email'=>'required|unique:users,email,'.$user->id,
+                        'password'=>'required|min:6',
+                        'mobile'=>'required|unique:user_details,mobile',
+                    ]
+                    );
+                    if($validator->fails()){
+                        return response()->json(['validation_error'=>$validator->messages()],401);
+                    }
+                    else{
+
+                    }
+
                     $user_details= UserDetail::where('user_id','=',$id)->first();
                     if($request->name){
                         $user->name=$request->name;
@@ -414,7 +427,7 @@ class PassportController extends Controller
                         $role->save();
                         $token =$user->createToken('medilife')->accessToken;
                         return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
-         
+
                     }
                           }
                 else{
@@ -448,40 +461,54 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $user=User::find($id);
-                    $user_details= UserDetail::where('user_id','=',$id)->first();
-                    if($request->name){
-                        $user->name=$request->name;
+                    $validator = Validator::make($request->all(),[
+                        'name'=>'required|max:100',
+                        'email'=>'required|unique:users,email,'.$user->id,
+                        'password'=>'required|min:6',
+                        'mobile'=>'required|unique:user_details,mobile',
+                    ]
+                    );
+                    if($validator->fails()){
+                        return response()->json(['validation_error'=>$validator->messages()],401);
                     }
-                    if($request->email){
-                        $user->email=$request->email;
+                    else{
+
+                        $user_details= UserDetail::where('user_id','=',$id)->first();
+                        if($request->name){
+                            $user->name=$request->name;
+                        }
+                        if($request->email){
+                            $user->email=$request->email;
+                        }
+                        if($request->password){
+                            $user->password=Hash::make($request->password);;
+                        }
+                        if($request->doj){
+                            $user_details->doj=$request->doj;
+                        }
+                        if($request->mobile){
+                            $user_details->mobile=$request->mobile;
+                        }
+                        if($request->address){
+                            $user_details->address=$request->address;
+                        }
+                        if($request->dob){
+                            $user_details->dob=$request->dob;
+                        }
+                        if($request->age){
+                            $user_details->age=$request->age;
+                        }
+                        // if($request->designation){
+                        //     $user_details->designation=$request->designation;
+                        // }
+                        // if($request->location_id){
+                        //     $user_details->location_id=$request->location_id;
+                        // }
+                        $user_details->update();
+                        $user->update();
+                        return response()->json(['user'=>$user,'user_details'=>$user_details],200);
+
                     }
-                    if($request->password){
-                        $user->password=Hash::make($request->password);;
-                    }
-                    if($request->doj){
-                        $user_details->doj=$request->doj;
-                    }
-                    if($request->mobile){
-                        $user_details->mobile=$request->mobile;
-                    }
-                    if($request->address){
-                        $user_details->address=$request->address;
-                    }
-                    if($request->dob){
-                        $user_details->dob=$request->dob;
-                    }
-                    if($request->age){
-                        $user_details->age=$request->age;
-                    }
-                    if($request->designation){
-                        $user_details->designation=$request->designation;
-                    }
-                    // if($request->location_id){
-                    //     $user_details->location_id=$request->location_id;
-                    // }
-                    $user_details->update();
-                    $user->update();
-                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
