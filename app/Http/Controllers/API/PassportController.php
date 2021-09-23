@@ -304,9 +304,9 @@ class PassportController extends Controller
                     $user=User::find($id);
                     $validator = Validator::make($request->all(),[
 
-                        'email'=>'unique:users,email,'.$user->id,
+                        'email'=>'unique:users,email',
                         'password'=>'min:6',
-                        'mobile'=>'unique:user_details,mobile'.$user->id,
+                        'mobile'=>'unique:user_details,mobile',
                     ]
                     );
                     if($validator->fails()){
@@ -466,9 +466,9 @@ class PassportController extends Controller
                     $user=User::find($id);
                     $validator = Validator::make($request->all(),[
 
-                        'email'=>'unique:users,email,'.$user->id,
+                        'email'=>'unique:users,email',
                         'password'=>'min:6',
-                        'mobile'=>'unique:user_details,mobile'.$user->id,
+                        'mobile'=>'unique:user_details,mobile',
                     ]
                     );
                     if($validator->fails()){
