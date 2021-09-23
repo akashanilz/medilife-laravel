@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Client ;
+use App\Models\Group;
 use App\Models\Location;
+use App\Models\Time;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Expr\New_;
 
 class PassportController extends Controller
 {
@@ -240,7 +244,7 @@ class PassportController extends Controller
                     $user_details->mobile=$request->mobile;
                     $user_details->address=$request->address;
                     $user_details->dob=$request->dob;
-                    $user_details->location_id=$request->location_id;
+                   // $user_details->location_id=$request->location_id;
                     $user_details->age=$request->age;
                     $user_details->designation=$request->designation;
                     $user_details->save();
@@ -310,9 +314,9 @@ class PassportController extends Controller
                     if($request->designation){
                         $user_details->designation=$request->designation;
                     }
-                    if($request->location_id){
-                        $user_details->location_id=$request->location_id;
-                    }
+                    // if($request->location_id){
+                    //     $user_details->location_id=$request->location_id;
+                    // }
                     $user_details->update();
                     $user->update();
                     return response()->json(['user'=>$user,'user_details'=>$user_details],200);
@@ -375,7 +379,7 @@ class PassportController extends Controller
                     $user_details->mobile=$request->mobile;
                     $user_details->address=$request->address;
                     $user_details->dob=$request->dob;
-                    $user_details->location_id=$request->location_id;
+                   // $user_details->location_id=$request->location_id;
                     $user_details->age=$request->age;
                     $user_details->designation=$request->designation;
                     $user_details->save();
@@ -445,9 +449,9 @@ class PassportController extends Controller
                     if($request->designation){
                         $user_details->designation=$request->designation;
                     }
-                    if($request->location_id){
-                        $user_details->location_id=$request->location_id;
-                    }
+                    // if($request->location_id){
+                    //     $user_details->location_id=$request->location_id;
+                    // }
                     $user_details->update();
                     $user->update();
                     return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
@@ -493,21 +497,105 @@ class PassportController extends Controller
                 return response()->json(["Error"=>"Unauthorized"],401);
             }
         }
-        public function getFreeUsers(Request $request){
-            $date=$request->date;
-            $time=$request->time;
-            $to_time = Carbon::parse($time)->addHour()->toTimeString();
-           // dd($to_time);
-            $driver = User::whereHas('role',function($q){
-                $q->where('role',3);
-            })->whereDoesntHave('driverAppointments', function ($query) use($date,$time,$to_time)  {
-                $query->where('date','=',$date)->where('time',$time);
-            })->get();
-            $employee = User::whereHas('role',function($q){
-                $q->where('role',2);
-            })->whereDoesntHave('employeeAppointments', function ($query) use($date,$time,$to_time)  {
-                $query->where('date','=',$date)->where('time',$time);
-            })->get();
-            return response()->json(['employee'=>$employee,'driver'=>$driver],200);
+        /**Appointment */
+        public function timeRange(){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $time=Time::all();
+                    return response()->json($time,200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
         }
+        public function getFreeUsers(Request $request){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                   $date=$request->date;
+                   $time=$request->time;
+                //    $to_time = Carbon::parse($time)->addHour()->toTimeString();
+                //    // dd($to_time);
+                   $driver = User::whereHas('role',function($q){
+                   $q->where('role',3);
+                      })->whereDoesntHave('driverAppointments', function ($query) use($date,$time)  {
+                      $query->where('date','=',$date)->where('time_id','=', $time);
+                   })->get();
+                  $employee = User::whereHas('role',function($q){
+                  $q->where('role',2);
+                    })->whereDoesntHave('employeeAppointments', function ($query) use($date,$time)  {
+                    $query->where('date','=',$date)->where('time_id','=', $time);
+                    })->get();
+                    return response()->json(['employee'=>$employee,'driver'=>$driver],200);
+                }
+                 else{
+                 return response()->json(["Error"=>"Unauthorized"],401);
+                 }
+            }
+        }
+        public function createAppointment(Request $request){
+            if(auth()->user()){
+                $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+                if($roles->role == 1){
+                    $appointment=new Appointment();
+                    $appointment->remark=$request->remark;
+                    $appointment->employee_id=$request->employee;
+                    $appointment->driver_id=$request->driver;
+                    $appointment->time_id=$request->time;
+                    $appointment->date=$request->date;
+                    $appointment->location=$request->location;
+                    $appointment->number_of_test=$request->number_of_test;
+                    $appointment->cost_per_test=$request->cost_per_test;
+                    $appointment->net_amount=$request->net_amount;
+                    $appointment->payment_type=$request->payment_type;
+                    $appointment->sales_office=auth()->user()->email;
+                    $appointment->save();
+                    foreach($request->clients as $key => $clients){
+                        $client=new Client();
+                        $group=new Group();
+                        $client->whatsapp_number=$clients['whatsapp_number'];
+                        $client->contact_number=$clients['contact_number'];
+                        $client->name=$clients['name'];
+                        $client->building_name=$clients['building_name'];
+                        $client->room_number=$clients['room_number'];
+                        $client->tat=$clients['tat'];
+                        $client->id_number=$clients['id_number'];
+                        $client->id_type=$clients['id_type'];
+                        $client->email=$clients['email'];
+                        $client->alhasna_number=$clients['alhasna_number'];
+                        $client->save();
+                        $group->appointment_id=$appointment->id;
+                        $group->client_id=$client['id'];
+                        $group->save();
+                    }
+                    return response()->json("Success",200);
+                }
+                else{
+                    return response()->json(["Error"=>"Unauthorized"],401);
+                }
+        }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+    }
+    public function allAppointments(){
+        if(auth()->user()){
+            $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+            if($roles->role == 1){
+                $appointment= Appointment::with('time','employee','driver')->get();
+                return response()->json($appointment,200);
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+    }
+    else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+}
 }

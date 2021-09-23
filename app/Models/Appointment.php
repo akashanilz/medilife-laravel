@@ -10,11 +10,22 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $appends = ['to_time'];
+   // protected $appends = ['to_time'];
     public function employee(){
-        return $this->belongsTo(User::class); 
-    
+        return $this->belongsTo(User::class,'employee_id');
+
         }
+        public function driver(){
+            return $this->belongsTo(User::class,'driver_id');
+
+            }
+            public function time(){
+                return $this->belongsTo(Time::class);
+
+                }
+        public function group(){
+            return $this->hasMany(Group::class);
+            }
 
         // public function getToTimeAttribute(){
         //     return Carbon::parse($this->time)->addHour()->toTimeString();

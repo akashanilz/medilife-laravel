@@ -52,7 +52,9 @@ Route::prefix('dashboard')->group(function () {
           Route::delete('deleteDriver/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteDriver']);
           /**Appointment */
           Route::post('getFreeUsers', [\App\Http\Controllers\API\PassportController::class,'getFreeUsers']);
-         
+          Route::post('createAppointment', [\App\Http\Controllers\API\PassportController::class,'createAppointment']);
+          Route::get('timeRange', [\App\Http\Controllers\API\PassportController::class,'timeRange']);
+          Route::get('allAppointments', [\App\Http\Controllers\API\PassportController::class,'allAppointments']);
+
     });
 });
-
