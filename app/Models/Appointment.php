@@ -12,11 +12,11 @@ class Appointment extends Model
 
    // protected $appends = ['to_time'];
     public function employee(){
-        return $this->belongsTo(User::class,'employee_id');
+        return $this->belongsTo(User::class,'employee_id')->withTrashed();
 
         }
         public function driver(){
-            return $this->belongsTo(User::class,'driver_id');
+            return $this->belongsTo(User::class,'driver_id')->withTrashed();
 
             }
             public function time(){
