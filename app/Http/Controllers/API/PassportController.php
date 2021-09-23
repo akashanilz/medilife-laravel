@@ -14,6 +14,7 @@ use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\New_;
 
 class PassportController extends Controller
@@ -233,28 +234,40 @@ class PassportController extends Controller
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
-                    $user=new User();
-                    $user_details= new UserDetail();
-                    $user->name=$request->name;
-                    $user->email=$request->email;
-                    $user->password=Hash::make($request->password);
-                    $user->save();
-                    $user_details->user_id=$user->id;
-                    $user_details->doj=$request->doj;
-                    $user_details->mobile=$request->mobile;
-                    $user_details->address=$request->address;
-                    $user_details->dob=$request->dob;
-                   // $user_details->location_id=$request->location_id;
-                    $user_details->age=$request->age;
-                    $user_details->designation=$request->designation;
-                    $user_details->save();
-                    $role=new UserRole();
-                    $role->user_id=$user->id;
-                    $role->role=2;
-                    $role->save();
-                    $token =$user->createToken('medilife')->accessToken;
-                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
-                }
+                    $validator = Validator::make($request->all(),[
+                        'name'=>'required|max:100',
+                        'email'=>'required|unique:users,email',
+                        'password'=>'required|min:6',
+                        'mobile'=>'required|unique:user_details,mobile',
+                    ]
+                    );
+                    if($validator->fails()){
+                        return response()->json(['validation_error'=>$validator->messages()],401);
+                    }else{
+                        $user=new User();
+                        $user_details= new UserDetail();
+                        $user->name=$request->name;
+                        $user->email=$request->email;
+                        $user->password=Hash::make($request->password);
+                        $user->save();
+                        $user_details->user_id=$user->id;
+                        $user_details->doj=$request->doj;
+                        $user_details->mobile=$request->mobile;
+                        $user_details->address=$request->address;
+                        $user_details->dob=$request->dob;
+                       // $user_details->location_id=$request->location_id;
+                        $user_details->age=$request->age;
+                        $user_details->designation=$request->designation;
+                        $user_details->save();
+                        $role=new UserRole();
+                        $role->user_id=$user->id;
+                        $role->role=2;
+                        $role->save();
+                        $token =$user->createToken('medilife')->accessToken;
+                        return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
+
+                    }
+                  }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
                 }
@@ -285,6 +298,7 @@ class PassportController extends Controller
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
+
                     $user=User::find($id);
                     $user_details= UserDetail::where('user_id','=',$id)->first();
                     if($request->name){
@@ -368,28 +382,41 @@ class PassportController extends Controller
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
-                    $user=new User();
-                    $user_details= new UserDetail();
-                    $user->name=$request->name;
-                    $user->email=$request->email;
-                    $user->password=Hash::make($request->password);
-                    $user->save();
-                    $user_details->user_id=$user->id;
-                    $user_details->doj=$request->doj;
-                    $user_details->mobile=$request->mobile;
-                    $user_details->address=$request->address;
-                    $user_details->dob=$request->dob;
-                   // $user_details->location_id=$request->location_id;
-                    $user_details->age=$request->age;
-                    $user_details->designation=$request->designation;
-                    $user_details->save();
-                    $role=new UserRole();
-                    $role->user_id=$user->id;
-                    $role->role=3;
-                    $role->save();
-                    $token =$user->createToken('medilife')->accessToken;
-                    return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
-                }
+                    $validator = Validator::make($request->all(),[
+                        'name'=>'required|max:100',
+                        'email'=>'required|unique:users,email',
+                        'password'=>'required|min:6',
+                        'mobile'=>'required|unique:user_details,mobile',
+                    ]
+                    );
+                    if($validator->fails()){
+                        return response()->json(['validation_error'=>$validator->messages()],401);
+                    }
+                    else{
+                        $user=new User();
+                        $user_details= new UserDetail();
+                        $user->name=$request->name;
+                        $user->email=$request->email;
+                        $user->password=Hash::make($request->password);
+                        $user->save();
+                        $user_details->user_id=$user->id;
+                        $user_details->doj=$request->doj;
+                        $user_details->mobile=$request->mobile;
+                        $user_details->address=$request->address;
+                        $user_details->dob=$request->dob;
+                       // $user_details->location_id=$request->location_id;
+                        $user_details->age=$request->age;
+                        $user_details->designation=$request->designation;
+                        $user_details->save();
+                        $role=new UserRole();
+                        $role->user_id=$user->id;
+                        $role->role=3;
+                        $role->save();
+                        $token =$user->createToken('medilife')->accessToken;
+                        return response()->json(['user'=>$user,'user_details'=>$user_details,'token'=>$token],200);
+         
+                    }
+                          }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
                 }
