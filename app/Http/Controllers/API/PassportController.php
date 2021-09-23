@@ -14,6 +14,7 @@ use App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\New_;
 
@@ -146,7 +147,9 @@ class PassportController extends Controller
                     $employee=UserRole::where('role','=',2)->get()->count();
                     $driver=UserRole::where('role','=',3)->get()->count();
                     $client=Client::all()->count();
-                    return response()->json(['employee'=>$employee,'client'=>$client,'driver'=>$driver],200);
+                    $appointments_not_confirmed=Appointment::where('confirm','=',0)->count();
+                    $appointments_confirmed=Appointment::where('confirm','=',1)->count();
+                    return response()->json(['employee'=>$employee,'client'=>$client,'driver'=>$driver,'appointments_not_confirmed'=>$appointments_not_confirmed,'appointments_confirmed'=>$appointments_confirmed],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
@@ -300,10 +303,10 @@ class PassportController extends Controller
                 if($roles->role == 1){
                     $user=User::find($id);
                     $validator = Validator::make($request->all(),[
-                        'name'=>'required|max:100',
-                        'email'=>'required|unique:users,email,'.$user->id,
-                        'password'=>'required|min:6',
-                        'mobile'=>'required|unique:user_details,mobile',
+
+                        'email'=>'unique:users,email,'.$user->id,
+                        'password'=>'min:6',
+                        'mobile'=>'unique:user_details,mobile'.$user->id,
                     ]
                     );
                     if($validator->fails()){
@@ -462,10 +465,10 @@ class PassportController extends Controller
                 if($roles->role == 1){
                     $user=User::find($id);
                     $validator = Validator::make($request->all(),[
-                        'name'=>'required|max:100',
-                        'email'=>'required|unique:users,email,'.$user->id,
-                        'password'=>'required|min:6',
-                        'mobile'=>'required|unique:user_details,mobile',
+
+                        'email'=>'unique:users,email,'.$user->id,
+                        'password'=>'min:6',
+                        'mobile'=>'unique:user_details,mobile'.$user->id,
                     ]
                     );
                     if($validator->fails()){
@@ -637,11 +640,11 @@ class PassportController extends Controller
             return response()->json(["Error"=>"Unauthorized"],401);
         }
     }
-    public function allAppointments(){
+    public function appointmentsNotConfirmed(){
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
             if($roles->role == 1){
-                $appointment= Appointment::with('time','employee','driver')->get();
+                $appointment= Appointment::where('confirm','=',0)->with('time','employee','driver')->get();
                 return response()->json($appointment,200);
             }
             else{
@@ -649,6 +652,53 @@ class PassportController extends Controller
             }
     }
     else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+}
+public function appointmentsConfirmed(){
+    if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 1){
+            $appointment= Appointment::where('confirm','=',1)->with('time','employee','driver')->get();
+            return response()->json($appointment,200);
+        }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+}
+else{
+    return response()->json(["Error"=>"Unauthorized"],401);
+}
+}
+    public function confirmAppointment($id){
+        if(auth()->user()){
+            $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+            if($roles->role == 1){
+                $appointment= Appointment::find($id);
+                $employee= $appointment->employee;
+                $driver= $appointment->driver;
+                $empmail=$employee->email;
+                $drivermail=$driver->email;
+                $data = array('employee'=>$employee->name,'driver'=>$driver->name,'time'=>$appointment->time->time,'date'=>$appointment->date,'location'=>$appointment->location);
+                Mail::send('mail', $data, function($message)use($empmail) {
+                   $message->to($empmail, 'Medilife')->subject
+                      ('Task Assigned');
+                   
+                });
+                Mail::send('mail', $data, function($message)use($drivermail) {
+                    $message->to($drivermail, 'Medilife')->subject
+                       ('Task Assigned');
+                    
+                 });
+                 $appointment->confirm=1;
+                 $appointment->update();
+              // dd($employee,$driver);
+               return response()->json("success",200);
+            }
+            else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+    }else{
         return response()->json(["Error"=>"Unauthorized"],401);
     }
 }
