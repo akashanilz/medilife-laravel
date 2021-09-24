@@ -305,7 +305,7 @@ class PassportController extends Controller
                     $validator = Validator::make($request->all(),[
 
                         'email'=>'unique:users,email',
-                        'password'=>'min:6',
+                        //'password'=>'min:6',
                         'mobile'=>'unique:user_details,mobile',
                     ]
                     );
@@ -467,7 +467,7 @@ class PassportController extends Controller
                     $validator = Validator::make($request->all(),[
 
                         'email'=>'unique:users,email',
-                        'password'=>'min:6',
+                       // 'password'=>'min:6',
                         'mobile'=>'unique:user_details,mobile',
                     ]
                     );
@@ -609,6 +609,9 @@ class PassportController extends Controller
                     $appointment->number_of_test=$request->number_of_test;
                     $appointment->cost_per_test=$request->cost_per_test;
                     $appointment->net_amount=$request->net_amount;
+                    if($appointment->disclosure){
+                        $appointment->disclosure=1;
+                    }
                     $appointment->payment_type=$request->payment_type;
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
@@ -683,12 +686,12 @@ else{
                 Mail::send('mail', $data, function($message)use($empmail) {
                    $message->to($empmail, 'Medilife')->subject
                       ('Task Assigned');
-                   
+
                 });
                 Mail::send('mail', $data, function($message)use($drivermail) {
                     $message->to($drivermail, 'Medilife')->subject
                        ('Task Assigned');
-                    
+
                  });
                  $appointment->confirm=1;
                  $appointment->update();
@@ -702,4 +705,56 @@ else{
         return response()->json(["Error"=>"Unauthorized"],401);
     }
 }
+  public function getMyTasks(){
+    if(auth()->user()){
+          $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->latest()->get();;
+           return response()->json($appointments,200);
+        }else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+  }
+  public function findAppointment($id){
+    if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 1  || $roles->role == 2 ){
+            $appointment= Group::where('appointment_id','=',$id)->with('appointment','client')->get();
+            $employee=Appointment::find($id)->employee;
+            $driver=Appointment::find($id)->driver;
+            return response()->json(['appointment'=>$appointment,'employee'=>$employee,'driver'=>$driver],200);
+        }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+    }else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+  }
+  public function changeAppointmentStatus($id){
+    if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 1  || $roles->role == 2 ){
+            $appointment=Appointment::find($id);
+            if($appointment->status==0){
+                $appointment->status=1;
+                $appointment->update();
+                return response()->json($appointment,200);
+            }
+            if($appointment->status==1){
+                $appointment->status=2;
+                $appointment->update();
+                return response()->json($appointment,200);
+            }
+            if($appointment->confirm==2){
+                $appointment->confirm=3;
+                $appointment->update();
+                return response()->json($appointment,200);
+            }
+           }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+    }else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+  }
 }

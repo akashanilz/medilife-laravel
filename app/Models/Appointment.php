@@ -27,6 +27,9 @@ class Appointment extends Model
             return $this->hasMany(Group::class);
             }
 
+            public function client(){
+                return $this->hasMany(Client::class);
+                }
         // public function getToTimeAttribute(){
         //     return Carbon::parse($this->time)->addHour()->toTimeString();
         // }

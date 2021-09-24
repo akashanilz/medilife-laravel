@@ -57,6 +57,10 @@ Route::prefix('dashboard')->group(function () {
           Route::get('appointmentsNotConfirmed', [\App\Http\Controllers\API\PassportController::class,'appointmentsNotConfirmed']);
           Route::get('confirmAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'confirmAppointment']);
           Route::get('appointmentsConfirmed', [\App\Http\Controllers\API\PassportController::class,'appointmentsConfirmed']);
-         
+         /**Employee -Driver get tasks */
+         Route::get('getMyTasks', [\App\Http\Controllers\API\PassportController::class,'getMyTasks']);
+         Route::get('findAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'findAppointment']);
+         Route::get('changeAppointmentStatus/{id}', [\App\Http\Controllers\API\PassportController::class,'changeAppointmentStatus']);
+       
     });
 });
