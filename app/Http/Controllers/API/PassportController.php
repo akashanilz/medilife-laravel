@@ -707,11 +707,18 @@ else{
 }
   public function getMyTasks(){
     if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 2){
           $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->latest()->get();;
            return response()->json($appointments,200);
-        }else{
-            return response()->json(["Error"=>"Unauthorized"],401);
         }
+        if($roles->role == 3){
+            $appointments=Appointment::where('driver_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->latest()->get();;
+             return response()->json($appointments,200);
+          }
+  }else{
+    return response()->json(["Error"=>"Unauthorized"],401);
+}
   }
   public function findAppointment($id){
     if(auth()->user()){
