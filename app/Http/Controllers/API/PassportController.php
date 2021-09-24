@@ -744,8 +744,8 @@ else{
                 $appointment->update();
                 return response()->json($appointment,200);
             }
-            if($appointment->confirm==2){
-                $appointment->confirm=3;
+            if($appointment->status==2){
+                $appointment->status=3;
                 $appointment->update();
                 return response()->json($appointment,200);
             }
@@ -756,5 +756,13 @@ else{
     }else{
         return response()->json(["Error"=>"Unauthorized"],401);
     }
+  }
+  public function getMyCompletedTasks(){
+    if(auth()->user()){
+          $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('status','=',3)->with('time','employee','driver')->latest()->get();;
+           return response()->json($appointments,200);
+        }else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
   }
 }
