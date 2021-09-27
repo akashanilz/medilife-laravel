@@ -811,7 +811,7 @@ else{
         if($roles->role == 1  || $roles->role == 2 ){
             $group= Group::where('appointment_id','=',$id)->with('appointment','client')->get();
             $employee=Appointment::find($id)->employee;
-            $appointment=Appointment::with('id','=',$id)->with('time')->get();
+            $appointment=Appointment::where('id','=',$id)->with('time')->get();
             $driver=Appointment::find($id)->driver;
             return response()->json(['appointment'=>$appointment,'group'=>$group,'employee'=>$employee,'driver'=>$driver],200);
         }
