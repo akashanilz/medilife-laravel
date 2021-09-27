@@ -123,7 +123,7 @@ class PassportController extends Controller
         public function createClient(Request $request){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
-                if($roles->role == 1){
+                if($roles->role == 1 || $roles->role == 2){
                     $client=new Client;
                     $client->name=$request->name;
                     $client->email=$request->email;
@@ -178,7 +178,7 @@ class PassportController extends Controller
         public function editClient(Request $request, $id){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
-                if($roles->role == 1){
+                if($roles->role == 1 || $roles->role == 2 ){
                     $client=Client::find($id);
                     if($request->name){
                         $client->name=$request->name;
@@ -186,11 +186,96 @@ class PassportController extends Controller
                     if($request->email){
                         $client->email=$request->email;
                     }
-                    if($request->mobile){
-                        $client->mobile=$request->mobile;
+                    if($request->contact_number){
+                        $client->contact_number=$request->contact_number;
                     }
                     if($request->address){
                         $client->address=$request->address;
+                    }
+                    if($request->whatsapp_number){
+                        $client->whatsapp_number=$request->whatsapp_number;
+                    }
+                    if($request->building_name){
+                        $client->building_name=$request->building_name;
+                    }
+                    if($request->room_number){
+                        $client->room_number=$request->room_number;
+                    }
+                    if($request->tat){
+                        $client->tat=$request->tat;
+                    }
+                    if($request->id_number){
+                        $client->id_number=$request->id_number;
+                    }
+                    if($request->id_type){
+                        $client->id_type=$request->id_type;
+                    }
+                    if($request->alhasna_number){
+                        $client->alhasna_number=$request->alhasna_number;
+                    }
+                    if($request->emirate){
+                        $client->emirate=$request->emirate;
+                    }
+                    if($request->type_of_client){
+                        $client->type_of_client=$request->type_of_client;
+                    }
+                    if($request->client_category){
+                        $client->client_category=$request->client_category;
+                    }
+                    if($request->occupation_uae){
+                        $client->occupation_uae=$request->occupation_uae;
+                    }
+                    if($request->company_name_uae){
+                        $client->company_name_uae=$request->company_name_uae;
+                    }
+                    if($request->company_address_uae){
+                        $client->company_address_uae=$request->company_address_uae;
+                    }
+                    if($request->emirate_uae){
+                        $client->emirate_uae=$request->emirate_uae;
+                    }
+                    if($request->country_visit_travel){
+                        $client->country_visit_travel=$request->country_visit_travel;
+                    }
+                    if($request->arriving_visit_travel){
+                        $client->arriving_visit_travel=$request->arriving_visit_travel;
+                    }
+                    if($request->arriving_date_travel){
+                        $client->arriving_date_travel=$request->arriving_date_travel;
+                    }
+                    if($request->departure_date_travel){
+                        $client->departure_date_travel=$request->departure_date_travel;
+                    }
+                    if($request->stay_length_travel){
+                        $client->stay_length_travel=$request->stay_length_travel;
+                    }
+                    if($request->institution_student){
+                        $client->institution_student=$request->institution_student;
+                    }
+                    if($request->type_student){
+                        $client->type_student=$request->type_student;
+                    }
+                    if($request->details_student){
+                        $client->details_student=$request->details_student;
+                    }
+                    if($request->institution_type_student){
+                        $client->institution_type_student=$request->institution_type_student;
+                    }
+
+                    if($request->location_student){
+                        $client->location_student=$request->location_student;
+                    }
+                    if($request->camp_name_labour){
+                        $client->camp_name_labour=$request->camp_name_labour;
+                    }
+                    if($request->address_camp_labour){
+                        $client->address_camp_labour=$request->address_camp_labour;
+                    }
+                    if($request->supervisor_name_labour){
+                        $client->supervisor_name_labour=$request->supervisor_name_labour;
+                    }
+                    if($request->supervisor_contact_number){
+                        $client->supervisor_contact_number=$request->supervisor_contact_number;
                     }
                     $client->update();
                     return response()->json(['client'=>$client],200);
@@ -206,7 +291,7 @@ class PassportController extends Controller
         public function viewClient($id){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
-                if($roles->role == 1){
+                if($roles->role == 1 || $roles->role == 2){
                     $client=Client::find($id);
                     return response()->json(['client'=>$client],200);
                 }
