@@ -809,10 +809,11 @@ else{
     if(auth()->user()){
         $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
         if($roles->role == 1  || $roles->role == 2 ){
-            $appointment= Group::where('appointment_id','=',$id)->with('appointment','client')->get();
+            $group= Group::where('appointment_id','=',$id)->with('appointment','client')->get();
             $employee=Appointment::find($id)->employee;
+            $appointment=Appointment::find($id);
             $driver=Appointment::find($id)->driver;
-            return response()->json(['appointment'=>$appointment,'employee'=>$employee,'driver'=>$driver],200);
+            return response()->json(['appointment'=>$appointment,'group'=>$group,'employee'=>$employee,'driver'=>$driver],200);
         }
         else{
             return response()->json(["Error"=>"Unauthorized"],401);
