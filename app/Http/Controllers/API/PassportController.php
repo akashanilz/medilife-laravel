@@ -183,6 +183,9 @@ class PassportController extends Controller
                     if($request->name){
                         $client->name=$request->name;
                     }
+        
+                        $client->status=1;
+                    
                     if($request->email){
                         $client->email=$request->email;
                     }
