@@ -871,6 +871,21 @@ else{
     return response()->json(["Error"=>"Unauthorized"],401);
 }
 }
+public function appointmentsCompleted(){
+    if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 1){
+            $appointment= Appointment::where('confirm','=',2)->with('time','employee','driver')->get();
+            return response()->json($appointment,200);
+        }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+}
+else{
+    return response()->json(["Error"=>"Unauthorized"],401);
+}
+}
     public function confirmAppointment($id){
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
