@@ -988,6 +988,10 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
                ('We are on the way');
         });
     }
+    $appointment=Appointment::find($id);
+    $appointment->status=1;
+    $appointment->update();
+    return response()->json($appointment,200);
 
   }
 }
