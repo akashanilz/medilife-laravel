@@ -440,6 +440,7 @@ class PassportController extends Controller
                         $user=new User();
                         $user_details= new UserDetail();
                         $user->name=$request->name;
+                        $user->mobile=$request->mobile;
                         $user->email=$request->email;
                         $user->password=Hash::make($request->password);
                         $user->save();
@@ -512,6 +513,9 @@ class PassportController extends Controller
                     }
                     if($request->email){
                         $user->email=$request->email;
+                    }
+                    if($request->mobile){
+                        $user->mobile=$request->mobile;
                     }
                     if($request->password){
                         $user->password=Hash::make($request->password);;
@@ -603,6 +607,7 @@ class PassportController extends Controller
                         $user_details= new UserDetail();
                         $user->name=$request->name;
                         $user->email=$request->email;
+                        $user->mobile=$request->mobile;
                         $user->password=Hash::make($request->password);
                         $user->save();
                         $user_details->user_id=$user->id;
@@ -672,6 +677,9 @@ class PassportController extends Controller
                         }
                         if($request->email){
                             $user->email=$request->email;
+                        }
+                        if($request->mobile){
+                            $user->mobile=$request->mobile;
                         }
                         if($request->password){
                             $user->password=Hash::make($request->password);;
@@ -873,6 +881,7 @@ else{
                 $empmail=$employee->email;
                 $drivermail=$driver->email;
                 $data = array('employee'=>$employee->name,'driver'=>$driver->name,'time'=>$appointment->time->time,'date'=>$appointment->date,'location'=>$appointment->location);
+                $group= Group::where('appointment_id','=',$id)->with('client')->get();
                 Mail::send('mail', $data, function($message)use($empmail) {
                    $message->to($empmail, 'Medilife')->subject
                       ('Task Assigned');
@@ -883,6 +892,12 @@ else{
                        ('Task Assigned');
 
                  });
+                 foreach($group as $client){
+                    Mail::send('mail1', $data, function($message)use($client) {
+                        $message->to($client->client->email, 'Medilife')->subject
+                           ('Your Covid Appointment Scheduled ');
+                    });
+                }
                  $appointment->confirm=1;
                  $appointment->update();
               // dd($employee,$driver);
@@ -899,11 +914,11 @@ else{
     if(auth()->user()){
         $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
         if($roles->role == 2){
-          $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->latest()->get();;
+          $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->get();;
            return response()->json($appointments,200);
         }
         if($roles->role == 3){
-            $appointments=Appointment::where('driver_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->latest()->get();;
+            $appointments=Appointment::where('driver_id','=',auth()->user()->id)->where('confirm','=',1)->with('time','employee','driver')->get();;
              return response()->json($appointments,200);
           }
   }else{
@@ -944,6 +959,7 @@ else{
             }
             if($appointment->status==2){
                 $appointment->status=3;
+                $appointment->confirm=2;
                 $appointment->update();
                 return response()->json($appointment,200);
             }
@@ -962,5 +978,17 @@ else{
         }else{
             return response()->json(["Error"=>"Unauthorized"],401);
         }
+  }
+  public function mail ($id){
+    $group= Group::where('appointment_id','=',$id)->with('client')->get();
+   // dd($group);
+$data = array('hello'=>'hhhh','jjjj'=>'iiiii');
+    foreach($group as $gg){
+        Mail::send('mail1', $data, function($message)use($gg) {
+            $message->to($gg->client->email, 'Medilife')->subject
+               ('Appointment Scheduled demo');
+        });
+    }
+
   }
 }
