@@ -63,7 +63,7 @@ Route::prefix('dashboard')->group(function () {
          Route::get('changeAppointmentStatus/{id}', [\App\Http\Controllers\API\PassportController::class,'changeAppointmentStatus']);
          Route::get('getMyCompletedTasks', [\App\Http\Controllers\API\PassportController::class,'getMyCompletedTasks']);
 
-         Route::get('mail/{id}', [\App\Http\Controllers\API\PassportController::class,'mail']);
+         Route::get('mailonTheWay/{id}', [\App\Http\Controllers\API\PassportController::class,'mailOnTheWay']);
 
     });
 });

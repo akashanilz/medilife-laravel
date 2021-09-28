@@ -979,14 +979,13 @@ else{
             return response()->json(["Error"=>"Unauthorized"],401);
         }
   }
-  public function mail ($id){
+  public function MailOnTheWay ($id){
     $group= Group::where('appointment_id','=',$id)->with('client')->get();
-   // dd($group);
 $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
-    foreach($group as $gg){
-        Mail::send('mail1', $data, function($message)use($gg) {
-            $message->to($gg->client->email, 'Medilife')->subject
-               ('Appointment Scheduled demo');
+    foreach($group as $client){
+        Mail::send('mail2', $data, function($message)use($client) {
+            $message->to($client->client->email, 'Medilife')->subject
+               ('We are on the way');
         });
     }
 
