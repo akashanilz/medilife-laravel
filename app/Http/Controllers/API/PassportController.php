@@ -1017,4 +1017,30 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
     return response()->json($appointment,200);
 
   }
+  public function editAppointment(Request $request ,$id){
+    if(auth()->user()){
+        $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+        if($roles->role == 1  || $roles->role == 2 ){
+
+            $appointment=Appointment::find($id);
+            if($request->payment_type){
+                $appointment->payment_type = $request->payment_type;
+            }
+            if($request->amount){
+                $appointment->net_amount = $request->amount;
+            }
+            if($request->number_of_test){
+                $appointment->number_of_test = $request->number_of_test;
+            }
+            $appointment->update();
+
+            return response()->json($appointment,200);
+        }
+        else{
+            return response()->json(["Error"=>"Unauthorized"],401);
+        }
+    }else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+  }
 }
