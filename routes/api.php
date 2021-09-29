@@ -64,7 +64,7 @@ Route::prefix('dashboard')->group(function () {
          Route::get('findAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'findAppointment']);
          Route::get('changeAppointmentStatus/{id}', [\App\Http\Controllers\API\PassportController::class,'changeAppointmentStatus']);
          Route::get('getMyCompletedTasks', [\App\Http\Controllers\API\PassportController::class,'getMyCompletedTasks']);
-         Route::put('editAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'findAppointment']);
+         Route::put('editAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'editAppointment']);
          Route::get('mailonTheWay/{id}', [\App\Http\Controllers\API\PassportController::class,'mailOnTheWay']);
 
     });
