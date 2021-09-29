@@ -155,6 +155,9 @@ class PassportController extends Controller
                     if($request->id_number){
                         $client->id_number=$request->id_number;
                     }
+                    if($request->alhasna){
+                        $client->alhasna=$request->alhasna;
+                    }
                     if($request->id_type){
                         $client->id_type=$request->id_type;
                     }
@@ -290,6 +293,9 @@ class PassportController extends Controller
 
                     if($request->email){
                         $client->email=$request->email;
+                    }
+                    if($request->alhasna){
+                        $client->alhasna=$request->alhasna;
                     }
                     if($request->contact_number){
                         $client->contact_number=$request->contact_number;
@@ -807,9 +813,10 @@ class PassportController extends Controller
                     $appointment->number_of_test=$request->number_of_test;
                     $appointment->cost_per_test=$request->cost_per_test;
                     $appointment->net_amount=$request->net_amount;
-                    if($appointment->disclosure=="yes"){
+                    if($appointment->disclosure="yes"){
                         $appointment->disclosure=1;
                     }
+
                     $appointment->payment_type=$request->payment_type;
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
@@ -826,6 +833,7 @@ class PassportController extends Controller
                         $client->id_type=$clients['id_type'];
                         $client->email=$clients['email'];
                         $client->alhasna_number=$clients['alhasna_number'];
+                        $client->alhasna=$clients['alhasna'];
                         $client->save();
                         $group->appointment_id=$appointment->id;
                         $group->client_id=$client['id'];
