@@ -1026,7 +1026,7 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
             if($request->payment_type){
                 $appointment->payment_type = $request->payment_type;
             }
-            if($request->amount){
+            if($request->net_amount){
                 $appointment->net_amount = $request->amount;
             }
             if($request->number_of_test){
