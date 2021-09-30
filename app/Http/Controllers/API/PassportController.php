@@ -155,6 +155,30 @@ class PassportController extends Controller
                     if($request->id_number){
                         $client->id_number=$request->id_number;
                     }
+                    if($request->sample_id){
+                        $client->sample_id=$request->sample_id;
+                    }
+                    if($request->rack_number){
+                        $client->rack_number=$request->rack_number;
+                    }
+                    if($request->mrn){
+                        $client->mrn=$request->mrn;
+                    }
+                    if($request->dob){
+                        $client->dob=$request->dob;
+                    }
+                    if($request->gender){
+                        $client->gender=$request->gender;
+                    }
+                    if($request->nationality){
+                        $client->nationality=$request->nationality;
+                    }
+                    if($request->ai){
+                        $client->ai=$request->ai;
+                    }
+                    if($request->city){
+                        $client->city=$request->city;
+                    }
                     if($request->alhasna){
                         $client->alhasna=$request->alhasna;
                     }
@@ -296,7 +320,30 @@ class PassportController extends Controller
                           $client->id_image =$image;
                       }
                         $client->status=1;
-
+                        if($request->sample_id){
+                            $client->sample_id=$request->sample_id;
+                        }
+                        if($request->rack_number){
+                            $client->rack_number=$request->rack_number;
+                        }
+                        if($request->mrn){
+                            $client->mrn=$request->mrn;
+                        }
+                        if($request->dob){
+                            $client->dob=$request->dob;
+                        }
+                        if($request->gender){
+                            $client->gender=$request->gender;
+                        }
+                        if($request->nationality){
+                            $client->nationality=$request->nationality;
+                        }
+                        if($request->ai){
+                            $client->ai=$request->ai;
+                        }
+                        if($request->city){
+                            $client->city=$request->city;
+                        }
                     if($request->email){
                         $client->email=$request->email;
                     }
