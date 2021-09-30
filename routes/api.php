@@ -34,7 +34,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('createClient', [\App\Http\Controllers\API\PassportController::class,'createClient']);
         Route::get('count', [\App\Http\Controllers\API\PassportController::class,'count']);
         Route::get('allClients', [\App\Http\Controllers\API\PassportController::class,'allClients']);
-        Route::put('editClient/{id}', [\App\Http\Controllers\API\PassportController::class,'editClient']);
+        Route::post('editClient/{id}', [\App\Http\Controllers\API\PassportController::class,'editClient']);
         Route::get('viewClient/{id}', [\App\Http\Controllers\API\PassportController::class,'viewClient']);
         Route::delete('deleteClient/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteClient']);
         /**Employee */

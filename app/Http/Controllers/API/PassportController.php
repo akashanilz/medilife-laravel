@@ -288,6 +288,7 @@ class PassportController extends Controller
                     if($request->name){
                         $client->name=$request->name;
                     }
+                   // dd($request->file('image'));
                       if($request->file('image')){
                           $file = $request->file('image');
                           $image= uniqid() . '.' . $file->extension();
