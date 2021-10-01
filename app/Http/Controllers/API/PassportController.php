@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exports\AppointmentExport;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Client ;
@@ -1096,4 +1097,8 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
         return response()->json(["Error"=>"Unauthorized"],401);
     }
   }
+  public function export($id)
+    {
+        return (new AppointmentExport($id))->download('appointment.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
 }
