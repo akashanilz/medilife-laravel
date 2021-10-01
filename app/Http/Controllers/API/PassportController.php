@@ -281,7 +281,7 @@ class PassportController extends Controller
                     $appointments_confirmed=Appointment::where('confirm','=',1)->count();
                     $appointments_completed= Appointment::where('confirm','=',2)->get();
 
-                    return response()->json(['employee'=>$employee,'client'=>$client,'driver'=>$driver,'appointments_not_confirmed'=>$appointments_not_confirmed,'appointments_confirmed'=>$appointments_confirmed],200);
+                    return response()->json(['employee'=>$employee,'client'=>$client,'driver'=>$driver,'appointments_not_confirmed'=>$appointments_not_confirmed,'appointments_confirmed'=>$appointments_confirmed,'appointments_completed'=>$appointments_completed],200);
                 }
                 else{
                     return response()->json(["Error"=>"Unauthorized"],401);
