@@ -58,6 +58,7 @@ Route::prefix('dashboard')->group(function () {
           Route::get('confirmAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'confirmAppointment']);
           Route::get('appointmentsConfirmed', [\App\Http\Controllers\API\PassportController::class,'appointmentsConfirmed']);
           Route::get('appointmentsCompleted', [\App\Http\Controllers\API\PassportController::class,'appointmentsCompleted']);
+          Route::delete('deleteAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'deleteAppointment']);
 
           /**Employee -Driver get tasks */
          Route::get('getMyTasks', [\App\Http\Controllers\API\PassportController::class,'getMyTasks']);

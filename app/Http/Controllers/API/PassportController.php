@@ -1099,8 +1099,17 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
         return response()->json(["Error"=>"Unauthorized"],401);
     }
   }
+  public function deleteAppointment($id){
+    $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+    if($roles->role == 1 ){
+            Appointment::find($id)->delete();
+            return response()->json("success",200);
+    }else{
+        return response()->json(["Error"=>"Unauthorized"],401);
+    }
+  }
   public function export($id)
     {
-        return (new AppointmentExport($id))->download('appointment.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        return (new AppointmentExport($id))->download('ssf.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }
