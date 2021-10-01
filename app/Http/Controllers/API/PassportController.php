@@ -279,6 +279,8 @@ class PassportController extends Controller
                     $client=Client::all()->count();
                     $appointments_not_confirmed=Appointment::where('confirm','=',0)->count();
                     $appointments_confirmed=Appointment::where('confirm','=',1)->count();
+                    $appointments_completed= Appointment::where('confirm','=',2)->get();
+
                     return response()->json(['employee'=>$employee,'client'=>$client,'driver'=>$driver,'appointments_not_confirmed'=>$appointments_not_confirmed,'appointments_confirmed'=>$appointments_confirmed],200);
                 }
                 else{
