@@ -869,7 +869,7 @@ class PassportController extends Controller
                     $appointment->number_of_test=$request->number_of_test;
                     $appointment->cost_per_test=$request->cost_per_test;
                     $appointment->net_amount=$request->net_amount;
-                    if($appointment->disclosure="yes"){
+                    if($request->disclosure="yes"){
                         $appointment->disclosure=1;
                     }
 
