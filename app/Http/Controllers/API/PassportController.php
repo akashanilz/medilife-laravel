@@ -861,9 +861,9 @@ class PassportController extends Controller
                 if($roles->role == 1){
                     $appointment=new Appointment();
                     $appointment->remark=$request->remark;
-                    $appointment->employee_id=$request->employee;
-                    $appointment->driver_id=$request->driver;
-                    $appointment->time_id=$request->time;
+                    // $appointment->employee_id=$request->employee;
+                    // $appointment->driver_id=$request->driver;
+                    // $appointment->time_id=$request->time;
                     $appointment->date=$request->date;
                     $appointment->location=$request->location;
                     $appointment->number_of_test=$request->number_of_test;
