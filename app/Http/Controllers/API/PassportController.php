@@ -33,6 +33,7 @@ class PassportController extends Controller
         $role->save();
         $token =$user->createToken('medilife')->accessToken;
         return response()->json(['token'=>$token],200);
+
     }
     public function login(Request $request){
         $credentials=[
@@ -855,6 +856,21 @@ class PassportController extends Controller
                  }
             }
         }
+        public function scheduleAppointment(Request $request,$id){
+            $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
+            if($roles->role == 1){
+            $appointment= Appointment::find($id);
+            $appointment->employee_id=$request->employee;
+            $appointment->driver_id=$request->driver;
+            $appointment->time_id=$request->time;
+            $appointment->assign=1;
+            $appointment->update();
+            return response()->json($appointment,200);
+            }  else{
+                return response()->json(["Error"=>"Unauthorized"],401);
+            }
+
+        }
         public function createAppointment(Request $request){
             if(auth()->user()){
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
@@ -909,7 +925,7 @@ class PassportController extends Controller
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
             if($roles->role == 1){
-                $appointment= Appointment::where('confirm','=',0)->with('time','employee','driver')->get();
+                $appointment= Appointment::where('list','=',1)->with('time','employee','driver')->get();
                 return response()->json($appointment,200);
             }
             else{
@@ -978,6 +994,7 @@ else{
                     });
                 }
                  $appointment->confirm=1;
+                 $appointment->mail=1;
                  $appointment->update();
               // dd($employee,$driver);
                return response()->json("success",200);
@@ -1021,6 +1038,14 @@ else{
         return response()->json(["Error"=>"Unauthorized"],401);
     }
   }
+  public function clearConfirmedAppointments(){
+      $appointment = Appointment::where('confirm','=','1')->get();
+      foreach($appointment as $app){
+          $app->list=2;
+          $app->update();
+      }
+      return response()->json('success',200);
+  }
   public function changeAppointmentStatus($id){
     if(auth()->user()){
         $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
@@ -1050,6 +1075,7 @@ else{
         return response()->json(["Error"=>"Unauthorized"],401);
     }
   }
+
   public function getMyCompletedTasks(){
     if(auth()->user()){
           $appointments=Appointment::where('employee_id','=',auth()->user()->id)->where('status','=',3)->with('time','employee','driver')->latest()->get();;

@@ -53,7 +53,9 @@ Route::prefix('dashboard')->group(function () {
           /**Appointment */
           Route::post('getFreeUsers', [\App\Http\Controllers\API\PassportController::class,'getFreeUsers']);
           Route::post('createAppointment', [\App\Http\Controllers\API\PassportController::class,'createAppointment']);
+          Route::post('scheduleAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'scheduleAppointment']);
           Route::get('timeRange', [\App\Http\Controllers\API\PassportController::class,'timeRange']);
+          Route::get('clearConfirmedAppointments', [\App\Http\Controllers\API\PassportController::class,'clearConfirmedAppointments']);
           Route::get('appointmentsNotConfirmed', [\App\Http\Controllers\API\PassportController::class,'appointmentsNotConfirmed']);
           Route::get('confirmAppointment/{id}', [\App\Http\Controllers\API\PassportController::class,'confirmAppointment']);
           Route::get('appointmentsConfirmed', [\App\Http\Controllers\API\PassportController::class,'appointmentsConfirmed']);
