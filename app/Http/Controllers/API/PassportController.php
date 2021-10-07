@@ -278,7 +278,7 @@ class PassportController extends Controller
                     $employee=UserRole::where('role','=',2)->get()->count();
                     $driver=UserRole::where('role','=',3)->get()->count();
                     $client=Client::all()->count();
-                    $appointments_not_confirmed=Appointment::where('confirm','=',0)->count();
+                    $appointments_not_confirmed=Appointment::where('list','=',1)->count();
                     $appointments_confirmed=Appointment::where('confirm','=',1)->count();
                     $appointments_completed= Appointment::where('confirm','=',2)->count();
 
