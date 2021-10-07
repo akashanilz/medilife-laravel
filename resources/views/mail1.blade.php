@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body> <p>Your covid appointment is scheduled and our staff will reach on time</p>
+<body> <p>You  pcr test appointment is scheduled and our staff will reach on time</p>
     <h1>Date : {{ $date }}  </h1>
     <br>
     <h1> Time : {{ $time }}</h1>
