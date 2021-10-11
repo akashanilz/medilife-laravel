@@ -876,39 +876,55 @@ class PassportController extends Controller
                 $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
                 if($roles->role == 1){
                     $appointment=new Appointment();
-                    $appointment->remark=$request->remark;
                     // $appointment->employee_id=$request->employee;
                     // $appointment->driver_id=$request->driver;
                     // $appointment->time_id=$request->time;
+
                     $appointment->date=$request->date;
-                    $appointment->location=$request->location;
-                    $appointment->number_of_test=$request->number_of_test;
-                    $appointment->cost_per_test=$request->cost_per_test;
-                    $appointment->net_amount=$request->net_amount;
+
+                    if($appointment->remark){
+                        $appointment->remark=$request->remark;
+                    }
+                    if($appointment->location){
+                        $appointment->location=$request->location;
+                    }
+                    if($appointment->number_of_test){
+                        $appointment->number_of_test=$request->number_of_test;
+                    }
+                    if($appointment->cost_per_test){
+                        $appointment->cost_per_test=$request->cost_per_test;
+                    }
+                    if($appointment->net_amount){
+                        $appointment->net_amount=$request->net_amount;
+                    }
                     if($request->disclosure){
                         $appointment->disclosure=$request->disclosure;
                     }
-                    $appointment->payment_type=$request->payment_type;
+                    if($request->payment_type){
+                        $appointment->payment_type=$request->payment_type;
+                    }
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
-                    foreach($request->clients as $key => $clients){
-                        $client=new Client();
-                        $group=new Group();
-                        $client->whatsapp_number=$clients['whatsapp_number'];
-                        $client->contact_number=$clients['contact_number'];
-                        $client->name=$clients['name'];
-                        $client->building_name=$clients['building_name'];
-                        $client->room_number=$clients['room_number'];
-                        $client->tat=$clients['tat'];
-                        $client->id_number=$clients['id_number'];
-                        $client->id_type=$clients['id_type'];
-                        $client->email=$clients['email'];
-                        $client->alhasna_number=$clients['alhasna_number'];
-                        $client->alhasna=$clients['alhasna'];
-                        $client->save();
-                        $group->appointment_id=$appointment->id;
-                        $group->client_id=$client['id'];
-                        $group->save();
+                    if($request->clients!==null){
+                        foreach($request->clients as $key => $clients){
+                            $client=new Client();
+                            $group=new Group();
+                            $client->whatsapp_number=$clients['whatsapp_number'];
+                            $client->contact_number=$clients['contact_number'];
+                            $client->name=$clients['name'];
+                            $client->building_name=$clients['building_name'];
+                            $client->room_number=$clients['room_number'];
+                            $client->tat=$clients['tat'];
+                            $client->id_number=$clients['id_number'];
+                            $client->id_type=$clients['id_type'];
+                            $client->email=$clients['email'];
+                            $client->alhasna_number=$clients['alhasna_number'];
+                            $client->alhasna=$clients['alhasna'];
+                            $client->save();
+                            $group->appointment_id=$appointment->id;
+                            $group->client_id=$client['id'];
+                            $group->save();
+                        }
                     }
                     return response()->json("Success",200);
                 }
@@ -920,6 +936,53 @@ class PassportController extends Controller
             return response()->json(["Error"=>"Unauthorized"],401);
         }
     }
+    public function createAppointmentClient(Request $request,$id){
+        $appointment= Appointment::find($id);
+        if($appointment->remark){
+            $appointment->remark=$request->remark;
+        }
+        if($appointment->location){
+            $appointment->location=$request->location;
+        }
+        if($appointment->number_of_test){
+            $appointment->number_of_test=$request->number_of_test;
+        }
+        if($appointment->cost_per_test){
+            $appointment->cost_per_test=$request->cost_per_test;
+        }
+        if($appointment->net_amount){
+            $appointment->net_amount=$request->net_amount;
+        }
+        if($request->disclosure){
+            $appointment->disclosure=$request->disclosure;
+        }
+        if($request->payment_type){
+            $appointment->payment_type=$request->payment_type;
+        }
+        $appointment->sales_office=auth()->user()->email;
+        $appointment->update();
+        if($request->clients!==null){
+            foreach($request->clients as $key => $clients){
+                $client=new Client();
+                $group=new Group();
+                $client->whatsapp_number=$clients['whatsapp_number'];
+                $client->contact_number=$clients['contact_number'];
+                $client->name=$clients['name'];
+                $client->building_name=$clients['building_name'];
+                $client->room_number=$clients['room_number'];
+                $client->tat=$clients['tat'];
+                $client->id_number=$clients['id_number'];
+                $client->id_type=$clients['id_type'];
+                $client->email=$clients['email'];
+                $client->alhasna_number=$clients['alhasna_number'];
+                $client->alhasna=$clients['alhasna'];
+                $client->save();
+                $group->appointment_id=$appointment->id;
+                $group->client_id=$client['id'];
+                $group->save();
+            }
+        }
+}
     public function appointmentsNotConfirmed(){
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
