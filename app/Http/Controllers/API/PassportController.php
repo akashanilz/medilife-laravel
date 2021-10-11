@@ -905,7 +905,7 @@ class PassportController extends Controller
                     }
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
-                    if($request->clients){
+                    if(count($request->clients) > 0){
                         foreach($request->clients as $key => $clients){
                             $client=new Client();
                             $group=new Group();
@@ -961,7 +961,7 @@ class PassportController extends Controller
         }
         $appointment->sales_office=auth()->user()->email;
         $appointment->update();
-        if($request->clients){
+        if(count($request->clients) > 0){
             foreach($request->clients as $key => $clients){
                 $client=new Client();
                 $group=new Group();
