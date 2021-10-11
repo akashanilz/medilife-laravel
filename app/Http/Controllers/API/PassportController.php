@@ -882,19 +882,19 @@ class PassportController extends Controller
 
                     $appointment->date=$request->date;
 
-                    if($appointment->remark){
+                    if($request->remark){
                         $appointment->remark=$request->remark;
                     }
-                    if($appointment->location){
+                    if($request->location){
                         $appointment->location=$request->location;
                     }
-                    if($appointment->number_of_test){
+                    if($request->number_of_test){
                         $appointment->number_of_test=$request->number_of_test;
                     }
-                    if($appointment->cost_per_test){
+                    if($request->cost_per_test){
                         $appointment->cost_per_test=$request->cost_per_test;
                     }
-                    if($appointment->net_amount){
+                    if($request->net_amount){
                         $appointment->net_amount=$request->net_amount;
                     }
                     if($request->disclosure){
@@ -938,19 +938,19 @@ class PassportController extends Controller
     }
     public function createAppointmentClient(Request $request,$id){
         $appointment= Appointment::find($id);
-        if($appointment->remark){
+        if($request->remark){
             $appointment->remark=$request->remark;
         }
-        if($appointment->location){
+        if($request->location){
             $appointment->location=$request->location;
         }
-        if($appointment->number_of_test){
+        if($request->number_of_test){
             $appointment->number_of_test=$request->number_of_test;
         }
-        if($appointment->cost_per_test){
+        if($request->cost_per_test){
             $appointment->cost_per_test=$request->cost_per_test;
         }
-        if($appointment->net_amount){
+        if($request->net_amount){
             $appointment->net_amount=$request->net_amount;
         }
         if($request->disclosure){
