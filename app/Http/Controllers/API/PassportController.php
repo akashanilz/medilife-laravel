@@ -905,27 +905,31 @@ class PassportController extends Controller
                     }
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
-                    if(count($request->clients) > 0){
+
+
                         foreach($request->clients as $key => $clients){
-                            $client=new Client();
-                            $group=new Group();
-                            $client->whatsapp_number=$clients['whatsapp_number'];
-                            $client->contact_number=$clients['contact_number'];
-                            $client->name=$clients['name'];
-                            $client->building_name=$clients['building_name'];
-                            $client->room_number=$clients['room_number'];
-                            $client->tat=$clients['tat'];
-                            $client->id_number=$clients['id_number'];
-                            $client->id_type=$clients['id_type'];
-                            $client->email=$clients['email'];
-                            $client->alhasna_number=$clients['alhasna_number'];
-                            $client->alhasna=$clients['alhasna'];
-                            $client->save();
-                            $group->appointment_id=$appointment->id;
-                            $group->client_id=$client['id'];
-                            $group->save();
+                            if($clients['name']){
+                                $client=new Client();
+                                $group=new Group();
+                                $client->whatsapp_number=$clients['whatsapp_number'];
+                                $client->contact_number=$clients['contact_number'];
+                                $client->name=$clients['name'];
+                                $client->building_name=$clients['building_name'];
+                                $client->room_number=$clients['room_number'];
+                                $client->tat=$clients['tat'];
+                                $client->id_number=$clients['id_number'];
+                                $client->id_type=$clients['id_type'];
+                                $client->email=$clients['email'];
+                                $client->alhasna_number=$clients['alhasna_number'];
+                                $client->alhasna=$clients['alhasna'];
+                                $client->save();
+                                $group->appointment_id=$appointment->id;
+                                $group->client_id=$client['id'];
+                                $group->save();
+                            }
+
                         }
-                    }
+
                     return response()->json("Success",200);
                 }
                 else{
@@ -961,8 +965,8 @@ class PassportController extends Controller
         }
         $appointment->sales_office=auth()->user()->email;
         $appointment->update();
-        if(count($request->clients) > 0){
-            foreach($request->clients as $key => $clients){
+        foreach($request->clients as $key => $clients){
+            if($clients['name']){
                 $client=new Client();
                 $group=new Group();
                 $client->whatsapp_number=$clients['whatsapp_number'];
@@ -981,6 +985,7 @@ class PassportController extends Controller
                 $group->client_id=$client['id'];
                 $group->save();
             }
+
         }
 }
     public function appointmentsNotConfirmed(){
