@@ -987,6 +987,7 @@ class PassportController extends Controller
             }
 
         }
+        return response()->json('success',200);
 }
     public function appointmentsNotConfirmed(){
         if(auth()->user()){
