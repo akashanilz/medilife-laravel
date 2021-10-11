@@ -888,7 +888,6 @@ class PassportController extends Controller
                     if($request->disclosure){
                         $appointment->disclosure=$request->disclosure;
                     }
-
                     $appointment->payment_type=$request->payment_type;
                     $appointment->sales_office=auth()->user()->email;
                     $appointment->save();
@@ -925,7 +924,7 @@ class PassportController extends Controller
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
             if($roles->role == 1){
-                $appointment= Appointment::where('list','=',1)->with('time','employee','driver')->get();
+                $appointment= Appointment::where('list','=',1)->with('time','employee','driver')->withCount('clients')->get();
                 return response()->json($appointment,200);
             }
             else{
