@@ -1175,7 +1175,6 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
     if(auth()->user()){
         $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
         if($roles->role == 1  || $roles->role == 2 ){
-
             $appointment=Appointment::find($id);
             if($request->payment_type){
                 $appointment->payment_type = $request->payment_type;
