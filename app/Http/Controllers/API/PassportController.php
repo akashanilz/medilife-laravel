@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\New_;
+use GuzzleHttp\Client as SMS;
 
 class PassportController extends Controller
 {
@@ -1042,13 +1043,22 @@ else{
         if(auth()->user()){
             $roles=UserRole::where('user_id','=',auth()->user()->id)->first();
             if($roles->role == 1){
+                $sms = new SMS();
                 $appointment= Appointment::find($id);
+                $location=$appointment->location;
                 $employee= $appointment->employee;
+                $employee_mobile=$employee->mobile;
+                $time1=$appointment->time->time;
+                $date1=$appointment->date;
                 $driver= $appointment->driver;
+                $driver_mobile=$driver->mobile;
                 $empmail=$employee->email;
                 $drivermail=$driver->email;
                 $data = array('employee'=>$employee->name,'driver'=>$driver->name,'time'=>$appointment->time->time,'date'=>$appointment->date,'location'=>$appointment->location);
                 $group= Group::where('appointment_id','=',$id)->with('client')->get();
+                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$employee_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%$location%20on%$date1%20at%20$time1");
+                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$driver_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%$location%20on%$date1%20at%20$time1");
+
                 Mail::send('mail', $data, function($message)use($empmail) {
                    $message->to($empmail, 'Medilife')->subject
                       ('Task Assigned');
@@ -1060,6 +1070,8 @@ else{
 
                  });
                  foreach($group as $client){
+                     $mobile=$client->mobile;
+                    $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$mobile&source=MEDILIFE&text=Your%20PCR%20appointment%20scheduled%20on%$date1%20at%20$time1");
                     Mail::send('mail1', $data, function($message)use($client) {
                         $message->to($client->client->email, 'Medilife')->subject
                            ('Your Covid Appointment Scheduled ');
