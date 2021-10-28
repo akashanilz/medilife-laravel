@@ -1056,8 +1056,8 @@ else{
                 $drivermail=$driver->email;
                 $data = array('employee'=>$employee->name,'driver'=>$driver->name,'time'=>$appointment->time->time,'date'=>$appointment->date,'location'=>$appointment->location);
                 $group= Group::where('appointment_id','=',$id)->with('client')->get();
-                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$employee_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%$location%20on%$date1%20at%20$time1");
-                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$driver_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%$location%20on%$date1%20at%20$time1");
+                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$employee_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%20$location%20on%20$date1%20at%20$time1");
+                $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$driver_mobile&source=MEDILIFE&text=New%20task%20assigned%20Location%20:%20$location%20on%20$date1%20at%20$time1");
 
                 Mail::send('mail', $data, function($message)use($empmail) {
                    $message->to($empmail, 'Medilife')->subject
@@ -1070,8 +1070,8 @@ else{
 
                  });
                  foreach($group as $client){
-                     $mobile=$client->mobile;
-                    $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$mobile&source=MEDILIFE&text=Your%20PCR%20appointment%20scheduled%20on%$date1%20at%20$time1");
+                     $mobile=$client->contact_number;
+                    $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$mobile&source=MEDILIFE&text=Your%20PCR%20Test%20appointment%20is%20scheduled%20on%$date1%20at%20$time1");
                     Mail::send('mail1', $data, function($message)use($client) {
                         $message->to($client->client->email, 'Medilife')->subject
                            ('Your Covid Appointment Scheduled ');
