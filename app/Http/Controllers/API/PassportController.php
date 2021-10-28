@@ -1070,8 +1070,8 @@ else{
 
                  });
                  foreach($group as $client){
-                     $mobile=$client->contact_number;
-                    $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$mobile&source=MEDILIFE&text=Your%20PCR%20Test%20appointment%20is%20scheduled%20on%$date1%20at%20$time1");
+                     $mobile=$client->client->contact_number;
+                    $response = $sms->get("http://web.brandmaster.ae/API/SendSMS?username=medilife&apiId=VNebvVdr&destination=$mobile&source=MEDILIFE&text=Your%20PCR%20Test%20appointment%20is%20scheduled%20on%20$date1%20at%20$time1");
                     Mail::send('mail1', $data, function($message)use($client) {
                         $message->to($client->client->email, 'Medilife')->subject
                            ('Your Covid Appointment Scheduled ');
