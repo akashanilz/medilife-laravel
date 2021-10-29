@@ -1192,7 +1192,7 @@ $data = array('hello'=>'hhhh','jjjj'=>'iiiii');
                 $appointment->payment_type = $request->payment_type;
             }
             if($request->net_amount){
-                $appointment->net_amount = $request->amount;
+                $appointment->net_amount = $request->net_amount;
             }
             if($request->number_of_test){
                 $appointment->number_of_test = $request->number_of_test;
